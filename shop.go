@@ -7,8 +7,6 @@ import (
 
 	"github.com/tidusant/c3m-common/c3mcommon"
 	"github.com/tidusant/c3m-common/log"
-	//	"net/http"
-
 	rpch "github.com/tidusant/chadmin-repo/cuahang"
 	"github.com/tidusant/chadmin-repo/models"
 	rpimg "github.com/tidusant/chadmin-repo/vrsgim"
@@ -46,8 +44,14 @@ func (t *Arith) Run(data string, result *string) error {
 	//check shop permission
 	shop := rpch.GetShopById(usex.UserID, ShopID)
 	if shop.Status == 0 {
-		*result = c3mcommon.ReturnJsonMessage("-4", "Shop is disabled.", "", "")
-		return nil
+		//load shop by default
+		shopid := rpch.GetShopDefault(usex.UserID)
+		if shopid == "" {
+			*result = c3mcommon.ReturnJsonMessage("-4", "Shop is disabled.", "", "")
+			return nil
+		}
+		shop = rpch.LoadShopById(usex.Session, usex.UserID, shopid)
+
 	}
 	usex.Shop = shop
 	if usex.Action == "cd" {
