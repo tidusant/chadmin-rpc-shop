@@ -134,7 +134,8 @@ func loadshopinfo(usex models.UserSession) string {
 		strrt += `,"Configs":` + confstr
 	}
 	//system config
-	strrt += `,"SysConfigs":{"Name":"` + usex.Shop.Name + `","Phone":"` + usex.Shop.Phone + `","Avatar":"` + usex.Shop.Config.Avatar + `","ShipFee":` + strconv.Itoa(usex.Shop.Config.ShipFee) + `,"FreeShip":` + strconv.Itoa(usex.Shop.Config.FreeShip) + `}`
+
+	strrt += `,"SysConfigs":{"Name":"` + usex.Shop.Name + `","Phone":"` + usex.Shop.Phone + `","Avatar":"` + usex.Shop.Config.Avatar + `","GHTKToken":"` + usex.Shop.Config.GHTKToken + `","FBPageId":"` + usex.Shop.Config.FBPageId + `","ShipFee":` + strconv.Itoa(usex.Shop.Config.ShipFee) + `,"FreeShip":` + strconv.Itoa(usex.Shop.Config.FreeShip) + `}`
 
 	//orther shop
 	otherShops := rpch.GetOtherShopById(usex.UserID, usex.Shop.ID.Hex())
