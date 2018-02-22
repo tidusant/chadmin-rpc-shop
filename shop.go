@@ -2,10 +2,11 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"net"
+	"time"
 
 	"github.com/tidusant/c3m-common/c3mcommon"
+	"github.com/tidusant/c3m-common/inflect"
 	"github.com/tidusant/c3m-common/log"
 	rpch "github.com/tidusant/chadmin-repo/cuahang"
 	"github.com/tidusant/chadmin-repo/models"
@@ -66,6 +67,12 @@ func (t *Arith) Run(data string, result *string) error {
 		*result = loadshopinfo(usex)
 	} else if usex.Action == "lco" {
 		*result = loadshopconfig(usex)
+	} else if usex.Action == "ca" {
+		*result = doCreateAlbum(usex)
+	} else if usex.Action == "la" {
+		*result = doLoadalbum(usex)
+	} else if usex.Action == "ea" {
+		*result = doEditAlbum(usex)
 	} else { //default
 		*result = ""
 	}
@@ -235,6 +242,91 @@ func createshop(usex models.UserSession) string {
 	return ""
 }
 
+func doCreateAlbum(usex models.UserSession) string {
+	albumname := usex.Params
+	if albumname == "" {
+		return c3mcommon.ReturnJsonMessage("0", "albumname empty", "", "")
+	}
+	//get config
+
+	if usex.Shop.ID.Hex() == "" {
+		return c3mcommon.ReturnJsonMessage("0", "shop not found", "", "")
+	}
+
+	if usex.Shop.Config.Level == 0 {
+		return c3mcommon.ReturnJsonMessage("0", "config error", "", "")
+
+	}
+	if usex.Shop.Config.MaxAlbum <= len(usex.Shop.Albums) {
+		return c3mcommon.ReturnJsonMessage("2", "album count limited", "", "")
+	}
+
+	slug := strings.ToLower(inflect.Camelize(inflect.Asciify(albumname)))
+	albumslug := slug
+	if slug == "" {
+		return c3mcommon.ReturnJsonMessage("0", "albumslug empty", "", "")
+	}
+	i := 1
+	//get array of album slug
+	albumslugs := map[string]string{}
+	for _, album := range usex.Shop.Albums {
+		albumslugs[album.Slug] = album.Name
+
+	}
+	for {
+		if _, ok := albumslugs[albumslug]; ok {
+			albumslug = slug + strconv.Itoa(i)
+			i++
+		} else {
+			break
+		}
+	}
+
+	//save albumname
+	usex.Shop.Albums = append(usex.Shop.Albums, models.ShopAlbum{Slug: albumslug, Name: albumname, Created: time.Now().UTC().Add(7 * time.Hour)})
+	rpch.UpdateAlbum(usex.Shop)
+
+	return c3mcommon.ReturnJsonMessage("1", "", "success", "\""+albumslug+"\"")
+
+}
+func doLoadalbum(usex models.UserSession) string {
+
+	//get config
+
+	strrt := "{\"\":\"\""
+	for _, album := range usex.Shop.Albums {
+		strrt += ",\"" + album.Slug + "\":\"" + album.Name + "\""
+	}
+
+	strrt += "}"
+	return c3mcommon.ReturnJsonMessage("1", "", "", strrt)
+
+}
+func doEditAlbum(usex models.UserSession) string {
+	//log.Debugf("update album ")
+	params := strings.Split(usex.Params, ",")
+	if len(params) < 2 {
+		return c3mcommon.ReturnJsonMessage("0", "albumname edit error", "", "")
+	}
+	albumslug := params[0]
+	albumname := params[1]
+	if albumname == "" {
+		return c3mcommon.ReturnJsonMessage("0", "albumname empty", "", "")
+	}
+	//get config
+
+	for i, album := range usex.Shop.Albums {
+		if album.Slug == albumslug {
+			usex.Shop.Albums[i].Name = albumname
+			rpch.UpdateAlbum(usex.Shop)
+			//log.Debugf("update album %s", albumname)
+			return c3mcommon.ReturnJsonMessage("1", "", "success", "\""+albumname+"\"")
+		}
+	}
+	//log.Debugf("update album false %s", albumname)
+	return c3mcommon.ReturnJsonMessage("0", "album not found", "", "")
+
+}
 func checkdomain(usex models.UserSession) string {
 
 	// colshop := db.C("addons_shops")
@@ -267,15 +359,15 @@ func main() {
 	flag.BoolVar(&debug, "debug", false, "Indicates if debug messages should be printed in log files")
 	flag.Parse()
 
-	logLevel := log.DebugLevel
-	if !debug {
-		logLevel = log.InfoLevel
+	// logLevel := log.DebugLevel
+	// if !debug {
+	// 	logLevel = log.InfoLevel
 
-	}
+	// }
 
-	log.SetOutputFile(fmt.Sprintf("adminShop-"+strconv.Itoa(port)), logLevel)
-	defer log.CloseOutputFile()
-	log.RedirectStdOut()
+	// log.SetOutputFile(fmt.Sprintf("adminShop-"+strconv.Itoa(port)), logLevel)
+	// defer log.CloseOutputFile()
+	// log.RedirectStdOut()
 
 	//init db
 	arith := new(Arith)
