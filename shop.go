@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"net"
 
 	"github.com/tidusant/c3m-common/c3mcommon"
@@ -351,15 +352,15 @@ func main() {
 	flag.BoolVar(&debug, "debug", false, "Indicates if debug messages should be printed in log files")
 	flag.Parse()
 
-	// logLevel := log.DebugLevel
-	// if !debug {
-	// 	logLevel = log.InfoLevel
+	logLevel := log.DebugLevel
+	if !debug {
+		logLevel = log.InfoLevel
 
-	// }
+	}
 
-	// log.SetOutputFile(fmt.Sprintf("adminShop-"+strconv.Itoa(port)), logLevel)
-	// defer log.CloseOutputFile()
-	// log.RedirectStdOut()
+	log.SetOutputFile(fmt.Sprintf("adminShop-"+strconv.Itoa(port)), logLevel)
+	defer log.CloseOutputFile()
+	log.RedirectStdOut()
 
 	//init db
 	arith := new(Arith)
