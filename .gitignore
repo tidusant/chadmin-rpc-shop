@@ -8,3 +8,4 @@ debug
 config.toml
 *.toml
 shopmac
+config.toml
