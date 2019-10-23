@@ -38,7 +38,7 @@ type Arith int
 
 func (t *Arith) Run(data string, result *models.RequestResult) error {
 	*result = c3mcommon.ReturnJsonMessage("0", "no action found", "", `{}`)
-	//parse args
+	//parse  args
 	args := strings.Split(data, "|")
 
 	if len(args) < 3 {
