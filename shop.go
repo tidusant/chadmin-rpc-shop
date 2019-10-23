@@ -209,7 +209,7 @@ func configSave(usex models.UserSession) models.RequestResult {
 	// var bcf models.BuildConfig
 	// bcf = config.BuildConfigs
 	// bcf.ShopId = usex.Shop.ID.Hex()
-	// rpb.SaveConfig(bcf)
+	// rpb.SaveConfig (bcf)
 
 	return c3mcommon.ReturnJsonMessage("1", "", "success", "")
 
