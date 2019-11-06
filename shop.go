@@ -8,7 +8,6 @@ import (
 	"github.com/tidusant/c3m-common/c3mcommon"
 	"github.com/tidusant/c3m-common/inflect"
 	"github.com/tidusant/c3m-common/log"
-	"github.com/tidusant/c3m-common/mycrypto"
 
 	rpch "github.com/tidusant/chadmin-repo/cuahang"
 	"github.com/tidusant/chadmin-repo/models"
@@ -198,7 +197,7 @@ func configSave(usex models.UserSession) models.RequestResult {
 	str += `,"BuildConfig":` + string(b) + `}`
 
 	request := "savetemplateconfig|" + usex.Session
-	resp := c3mcommon.RequestBuildService(request, "POST", "data="+mycrypto.EncDat2(str))
+	resp := c3mcommon.RequestBuildService(request, "POST", str)
 
 	if resp.Status != "1" {
 		return resp
@@ -211,6 +210,8 @@ func configSave(usex models.UserSession) models.RequestResult {
 	// bcf.ShopId = usex.Shop.ID.Hex()
 	// rpb.SaveConfig(bcf)
 
+	//rebuild config
+	rpch.Rebuild(usex)
 	return c3mcommon.ReturnJsonMessage("1", "", "success", "")
 
 }
@@ -219,7 +220,7 @@ func configGetAll(usex models.UserSession) models.RequestResult {
 	config.ShopConfigs = usex.Shop.Config
 
 	request := "gettemplateconfig|" + usex.Session
-	resp := c3mcommon.RequestBuildService(request, "POST", "data="+mycrypto.EncDat2(usex.Shop.Theme))
+	resp := c3mcommon.RequestBuildService(request, "POST", usex.Shop.Theme)
 
 	if resp.Status != "1" {
 		return resp
