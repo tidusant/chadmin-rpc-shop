@@ -38,6 +38,7 @@ type Arith int
 func (t *Arith) Run(data string, result *models.RequestResult) error {
 	*result = c3mcommon.ReturnJsonMessage("0", "no action found", "", `{}`)
 	//parse  args
+	log.Debugf("call with " + data)
 	args := strings.Split(data, "|")
 
 	if len(args) < 3 {
@@ -217,10 +218,10 @@ func configSave(usex models.UserSession) models.RequestResult {
 func configGetAll(usex models.UserSession) models.RequestResult {
 	var config ConfigViewData
 	config.ShopConfigs = usex.Shop.Config
-
+	log.Debugf("configGetAll")
 	request := "gettemplateconfig|" + usex.Session
 	resp := c3mcommon.RequestBuildService(request, "POST", usex.Shop.Theme)
-
+	log.Debugf("RequestBuildService call done")
 	if resp.Status != "1" {
 		return resp
 	}
