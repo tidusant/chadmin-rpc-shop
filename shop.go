@@ -93,7 +93,7 @@ func (t *Arith) Run(data string, result *models.RequestResult) error {
 // 	err := json.Unmarshal([]byte(usex.Params), &catinf)
 // 	if !c3mcommon.CheckError("createcat parse json", err) {
 // 		return c3mcommon.ReturnJsonMessage("0", "create cat fail", "", "")
-// 	}
+// 	} test dev
 
 // 	code := rpch.SaveCat(usex.UserID, usex.ShopID, catinf)
 
