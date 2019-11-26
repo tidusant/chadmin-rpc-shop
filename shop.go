@@ -160,6 +160,8 @@ func loadshopinfo(usex models.UserSession) models.RequestResult {
 	strrt += `,"User":{"Name":"` + user.Name + `"}`
 	strrt += "}"
 
+	log.Debugf("loadshopinfo: " + strrt)
+
 	return c3mcommon.ReturnJsonMessage("1", "", "success", strrt)
 
 }
