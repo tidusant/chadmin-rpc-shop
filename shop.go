@@ -54,6 +54,7 @@ func (t *Arith) Run(data string, result *string) error {
 		shop = rpch.LoadShopById(usex.Session, usex.UserID, shopid)
 
 	}
+	log.Debugf("Load shop %s",shopid)
 	usex.Shop = shop
 	if usex.Action == "cd" {
 		*result = checkdomain(usex)
