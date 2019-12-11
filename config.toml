@@ -1,6 +1,6 @@
 [dbvrsgim]
 h="localhost:27017"
-d="vrsgim"
+d="oldvrsgim"
 u="vrsgim"
 p="vrsgim@234."
 [dbchadmin]
