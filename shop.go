@@ -20,8 +20,8 @@ import (
 const (
 	defaultcampaigncode string = "XVsdAZGVmY"
 )
-type Arith int
 
+type Arith int
 
 func (t *Arith) Run(data string, result *string) error {
 	log.Debugf("Call RPCshop args:" + data)
@@ -54,7 +54,7 @@ func (t *Arith) Run(data string, result *string) error {
 		shop = rpch.LoadShopById(usex.Session, usex.UserID, shopid)
 
 	}
-	log.Debugf("Load shop %s",shopid)
+	log.Debugf("Load shop %s", shop.ID.Hex())
 	usex.Shop = shop
 	if usex.Action == "cd" {
 		*result = checkdomain(usex)
@@ -194,29 +194,29 @@ func loadshopconfig(usex models.UserSession) string {
 
 }
 
-func saveshopfbconnect(usex models.UserSession) string {
-	var user models.ShopUser
-	for _, v := range usex.Shop.Users {
-		if v.Id == usex.UserID {
-			user = v
-		}
-	}
-	if user.Level == "admin" {
+// func saveshopfbconnect(usex models.UserSession) string {
+// 	var user models.ShopUser
+// 	for _, v := range usex.Shop.Users {
+// 		if v.Id == usex.UserID {
+// 			user = v
+// 		}
+// 	}
+// 	if user.Level == "admin" {
 
-	}
-	userdomain := "0"
-	if usex.Shop.Config.Userdomain {
-		userdomain = "1"
-	}
-	ftpdomain := usex.Shop.Config.Domain
-	ftpuser := usex.Shop.Config.Ftpusername
-	filecount := rpimg.ImageCount(usex.Shop.ID.Hex())
-	prodcatscount := len(rpch.GetAllCats(usex.UserID, usex.Shop.ID.Hex()))
-	strrt := "{\"name\":\"" + usex.Shop.Name + "\",\"domain\":\"" + usex.Shop.Domain + "\",\"userdomain\":\"" + userdomain + "\",\"ftpdomain\":\"" + ftpdomain + "\",\"ftpuser\":\"" + ftpuser + "\",\"cats\":\"" + strconv.Itoa(prodcatscount) + "/" + strconv.Itoa(usex.Shop.Config.MaxCat) + "\",\"users\":\"" + strconv.Itoa(len(usex.Shop.Users)) + "/" + strconv.Itoa(usex.Shop.Config.MaxUser) + "\",\"albums\":\"" + strconv.Itoa(len(usex.Shop.Albums)) + "/" + strconv.Itoa(usex.Shop.Config.MaxAlbum) + "\",\"images\":\"" + strconv.Itoa(filecount) + "/" + strconv.Itoa(usex.Shop.Config.MaxImage) + "\"}"
+// 	}
+// 	userdomain := "0"
+// 	if usex.Shop.Config.Userdomain {
+// 		userdomain = "1"
+// 	}
+// 	ftpdomain := usex.Shop.Config.Domain
+// 	ftpuser := usex.Shop.Config.Ftpusername
+// 	filecount := rpimg.ImageCount(usex.Shop.ID.Hex())
+// 	prodcatscount := len(rpch.GetAllCats(usex.UserID, usex.Shop.ID.Hex()))
+// 	strrt := "{\"name\":\"" + usex.Shop.Name + "\",\"domain\":\"" + usex.Shop.Domain + "\",\"userdomain\":\"" + userdomain + "\",\"ftpdomain\":\"" + ftpdomain + "\",\"ftpuser\":\"" + ftpuser + "\",\"cats\":\"" + strconv.Itoa(prodcatscount) + "/" + strconv.Itoa(usex.Shop.Config.MaxCat) + "\",\"users\":\"" + strconv.Itoa(len(usex.Shop.Users)) + "/" + strconv.Itoa(usex.Shop.Config.MaxUser) + "\",\"albums\":\"" + strconv.Itoa(len(usex.Shop.Albums)) + "/" + strconv.Itoa(usex.Shop.Config.MaxAlbum) + "\",\"images\":\"" + strconv.Itoa(filecount) + "/" + strconv.Itoa(usex.Shop.Config.MaxImage) + "\"}"
 
-	return c3mcommon.ReturnJsonMessage("0", "no permission", "", "")
+// 	return c3mcommon.ReturnJsonMessage("0", "no permission", "", "")
 
-}
+// }
 
 // func loadcat(usex models.UserSession) string {
 // 	log.Debugf("loadcat begin")
