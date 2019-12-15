@@ -58,13 +58,14 @@ func (t *Arith) Run(data string, result *models.RequestResult) error {
 		usex.Params = args[3]
 	}
 	//check shop permission
-	shop := rpch.GetShopById(usex.UserID, ShopID)
-	if shop.Status == 0 {
-		*result = c3mcommon.ReturnJsonMessage("-4", "Shop is disabled.", "", "")
-		return nil
+	if ShopID != "" {
+		shop := rpch.GetShopById(usex.UserID, ShopID)
+		if shop.Status == 0 {
+			*result = c3mcommon.ReturnJsonMessage("-4", "Shop is disabled.", "", "")
+			return nil
+		}
+		usex.Shop = shop
 	}
-	usex.Shop = shop
-
 	if usex.Action == "cs" {
 		*result = ChangeShop(usex)
 
