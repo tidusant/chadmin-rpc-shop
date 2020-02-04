@@ -45,7 +45,7 @@ func (t *Arith) Run(data string, result *string) error {
 	//check shop permission
 	shop := rpch.GetShopById(usex.UserID, ShopID)
 	if shop.Status == 0 {
-		//load shop by default
+		//load shop by defaultv
 		shopid := rpch.GetShopDefault(usex.UserID)
 		if shopid == "" {
 			*result = c3mcommon.ReturnJsonMessage("-4", "Shop is disabled.", "", "")
