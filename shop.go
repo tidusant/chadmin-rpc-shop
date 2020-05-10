@@ -42,7 +42,7 @@ func (t *Arith) Run(data string, result *string) error {
 	if len(args) > 3 {
 		usex.Params = args[3]
 	}
-	//check shop permission
+	//check shop permissionush
 	shop := rpch.GetShopById(usex.UserID, ShopID)
 	if shop.Status == 0 {
 		//load shop by defaultv
